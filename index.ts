@@ -1,4 +1,4 @@
-const scribble = require('scribbletune');
+import * as scribble from 'scribbletune';
 
 const myChords = 'Am F Dm E Am F Dm E F'
 // const myChords = 'Am F Dm E Am F Dm E Am'
@@ -18,29 +18,33 @@ const myArpOrder = ['1535','6535','1535','1654'];
     })
   );
 
+
+  const removeNonStringFilter = (value: string | null): value is string => typeof value === 'string';
+  
   let bass1 = scribble.clip({
     notes: 'A2',
     pattern: '[-xRx][-xRR][-xRx][-xxR]'.repeat(1),
-    randomNotes: scribble.scale('A2 minor').slice(1),
+    randomNotes: scribble.scale('A2 minor').filter<string>(removeNonStringFilter).slice(1), 
+    //scribble.scale('A2 minor').slice(1),
     accent: '--x-',
   });
 
   let bass2 = scribble.clip({
     notes: 'F2',
     pattern: '[-xRx][-xRR][-xRx][-xxR]'.repeat(1),
-    randomNotes: scribble.scale('F2 major').slice(2,5),
+    randomNotes: scribble.scale('F2 major').filter<string>(removeNonStringFilter).slice(2,5),
     accent: '--x-',
   });
   let bass3 = scribble.clip({
     notes: 'D2',
     pattern: '[-xRx][-xRR][-xRx][-xxR]'.repeat(1),
-    randomNotes: scribble.scale('D2 minor').slice(2,5),
+    randomNotes: scribble.scale('D2 minor').filter<string>(removeNonStringFilter).slice(2,5),
     accent: '--x-',
   });
   let bass4 = scribble.clip({
     notes: 'E2',
     pattern: '[-xRx][-xRR][-xRx][-xxR]'.repeat(1),
-    randomNotes: scribble.scale('E2 major').slice(2,5),
+    randomNotes: scribble.scale('E2 major').filter<string>(removeNonStringFilter).slice(2,5),
     accent: '--x-',
   });
   console.log(bass1);
@@ -95,4 +99,3 @@ const snare = scribble.clip({
   
   scribble.midi(snare, 'snare.mid');
   
-
