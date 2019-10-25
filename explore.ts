@@ -1,58 +1,28 @@
 import {getChordsByProgression, clip, midi } from "scribbletune"
+import DrumPattern from './generateDrumPatterns';
 
 /* 
  * DRUMS
  * 
  */
 
-function _generateDrumPattern(numberOfBars: number, subdivisions: number, when: number[]){
-    const patternTemplate = '-'.repeat(numberOfBars * subdivisions);
-    const pattern = patternTemplate.split('');   
-
-    return when.reduce((acc, curr) => {
-        if (typeof curr === "number"){
-            let next = acc;
-            next[curr-1] = 'x';
-            return next;
-        }
-        console.log('unsupported as yet');
-        return acc;
-    },
-    pattern
-    ).join('');
-}
-
-const numberOfBars = 1;
-const subdivisions = 16;
-
-const generateDrumPattern = (when: number[]) => _generateDrumPattern(numberOfBars, subdivisions, when);
-
-
 // basic dnb pattern
 const hihat = [1,3,5,7,9,11,13,15];
 const snare = [5,13];
 const kick = [1,11];
-const hihatPattern = generateDrumPattern(hihat);
-const snarePattern = generateDrumPattern(snare);
-const kickPattern = generateDrumPattern(kick);
 
-console.log(hihatPattern);
-console.log(snarePattern);
-console.log(kickPattern);
 
-const repeat = 4;
+const hihatPattern = new DrumPattern('demo-hihat', { when: hihat } );
+const snarePattern = new DrumPattern('demo-snare', { when: snare } );
+const kickPattern = new DrumPattern('demo-kick', { when: kick } );
 
-const generateMidi = (pattern: string, filename: string, opts?: any) => midi(clip({
-    notes: 'c4',
-    pattern: pattern,
-    subdiv: `${subdivisions}n`,
-    accentLow: opts && opts.accentLow,
-}), filename)
+console.log(hihatPattern.show());
+console.log(snarePattern.show());
+console.log(kickPattern.show());
 
-generateMidi(kickPattern, 'test-kick.mid');
-generateMidi(snarePattern, 'test-snare.mid');
-generateMidi(hihatPattern, 'test-hihat.mid');
+hihatPattern.save();
+snarePattern.save();
+kickPattern.save();
 
-// const something = getChordsByProgression("C3 major", "I vi V VI")
-//console.log(something);
-
+// Next... have a few patterns
+// and be able to concat patterns
