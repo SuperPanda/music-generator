@@ -1,4 +1,4 @@
-import DrumPattern from './generateDrumPatterns';
+import DrumPattern from './DrumPattern';
 
 const genre = 'dnb';
 
