@@ -26,7 +26,7 @@ console.log(drum.kick!.show());
 
 drum.hihat!.save();
 drum.snare!.save();
-drum.kick!  .save();
+drum.kick!.save();
 }
 // Next... have a few patterns
 // and be able to concat patterns
