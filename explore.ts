@@ -1,6 +1,7 @@
 import {getChordsByProgression, clip, midi } from "scribbletune"
 import DrumPattern from './DrumPattern';
-import { getPattern, DnbDrumPatterns } from './dnbPatternCollection';
+import { getPattern, DnbDrumPatterns } from './DnbPatternCollection';
+import { DrumPatternCollection } from './DrumPattern';
 
 
 /* 
@@ -34,9 +35,14 @@ if (drum){
 const p1 = getPattern(DnbDrumPatterns.BASIC_1);
 const p2 = getPattern(DnbDrumPatterns.BASIC_2);
 // console.log(p1!.hihat!.show());
-
+if (p1 && p2){
+    DrumPattern.updateDrumPatternCollectionRepeat(p1 as DrumPatternCollection, 3);
+    const p3: DrumPatternCollection = DrumPattern.mergeDrumPatternCollection(p1, p2, 'merged');
+    DrumPattern.saveDrumPatternCollection(p3);
+}
+/*
 if (p1 && p1.kick && p2 && p2.kick)  {
     const newPattern = DrumPattern.mergePattern(p1.kick, p2.kick, 'test');
     console.log(newPattern.show());
-}
+}*/
 

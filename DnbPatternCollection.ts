@@ -26,15 +26,15 @@ interface DrumPatternInstrumentOptions {
 interface DrumPatternFields {
     numberOfBars?: number;
     subdivisions?: number;
-    hihat?: DrumPatternInstrumentOptions;
-    snare?: DrumPatternInstrumentOptions;
-    kick?: DrumPatternInstrumentOptions;
+    hihat: DrumPatternInstrumentOptions;
+    snare: DrumPatternInstrumentOptions;
+    kick: DrumPatternInstrumentOptions;
 }
 
 const patterns: { [key in DnbDrumPatterns]? : DrumPatternFields } = {
   [DnbDrumPatterns.BASIC_1]: {
     hihat: {
-        when: [1,3,5,7,9,11,13,15],             
+        when: [1,3,5,7,9,11,13,15],            
     },
     snare: {
         when: [5,13],
@@ -95,9 +95,9 @@ export function getPattern(pattern: DnbDrumPatterns){
     if (!chosenPattern) return undefined;
     const { kick, snare, hihat, numberOfBars = 1, subdivisions = 16 } = chosenPattern;
     return {
-        hihat: hihat && new DrumPattern(hihat.name, {numberOfBars, subdivisions, name: `${genre}_${pattern}_hihat`, ...hihat}),
-        snare: snare && new DrumPattern(snare.name, {numberOfBars, name: `${genre}_${pattern}_snare`, subdivisions, ...snare}),
-        kick: kick && new DrumPattern(kick.name, {numberOfBars, subdivisions, name: `{genre}_${pattern}_snare`, ...kick}),
+        hihat: new DrumPattern(hihat.name, {numberOfBars, subdivisions, name: `${genre}_${pattern}_hihat`, ...hihat}),
+        snare: new DrumPattern(snare.name, {numberOfBars, name: `${genre}_${pattern}_snare`, subdivisions, ...snare}),
+        kick: new DrumPattern(kick.name, {numberOfBars, subdivisions, name: `{genre}_${pattern}_snare`, ...kick}),
     }
 
 }
