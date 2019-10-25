@@ -30,10 +30,10 @@ export default class DrumPattern {
     private filename: string;
 
     
-    constructor(filename: string = 'emptydrums.mid', drumPatternOpts?: DrumPatternOpts){
+    constructor(name: string = 'emptydrums', drumPatternOpts?: DrumPatternOpts){
         this.numberOfBars = drumPatternOpts!.numberOfBars || 1;
         this.subdivisions = drumPatternOpts!.subdivisions || 16;
-        this.filename = filename;
+        this.filename = name;
         this.pattern = _generateDrumPattern(this.numberOfBars, this.subdivisions, drumPatternOpts!.when || [])
     }
 

@@ -1,5 +1,6 @@
 import {getChordsByProgression, clip, midi } from "scribbletune"
 import DrumPattern from './generateDrumPatterns';
+import { getPattern, DnbDrumPatterns } from './dnbPatternCollection';
 
 /* 
  * DRUMS
@@ -12,17 +13,20 @@ const snare = [5,13];
 const kick = [1,11];
 
 
-const hihatPattern = new DrumPattern('demo-hihat', { when: hihat } );
+/*const hihatPattern = new DrumPattern('demo-hihat', { when: hihat } );
 const snarePattern = new DrumPattern('demo-snare', { when: snare } );
 const kickPattern = new DrumPattern('demo-kick', { when: kick } );
+*/
+const drum = getPattern(DnbDrumPatterns.BASIC_1);
 
-console.log(hihatPattern.show());
-console.log(snarePattern.show());
-console.log(kickPattern.show());
+if (drum){
+console.log(drum.hihat!.show());
+console.log(drum.snare!.show());
+console.log(drum.kick!.show());
 
-hihatPattern.save();
-snarePattern.save();
-kickPattern.save();
-
+drum.hihat!.save();
+drum.snare!.save();
+drum.kick!  .save();
+}
 // Next... have a few patterns
 // and be able to concat patterns
