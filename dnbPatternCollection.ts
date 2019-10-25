@@ -87,11 +87,12 @@ const patterns: { [key in DnbDrumPatterns]? : DrumPatternFields } = {
 
 export function getPattern(pattern: DnbDrumPatterns){
     let chosenPattern;
-    if (pattern in Object.keys(patterns)){
+
+    if (Object.keys(patterns).includes(pattern)){
         chosenPattern = patterns[pattern];
     }
 
-    if (!chosenPattern) return null;
+    if (!chosenPattern) return undefined;
     const { kick, snare, hihat, numberOfBars = 1, subdivisions = 16 } = chosenPattern;
     return {
         hihat: hihat && new DrumPattern(hihat.name, {numberOfBars, subdivisions, name: `${genre}_${pattern}_hihat`, ...hihat}),
@@ -99,4 +100,8 @@ export function getPattern(pattern: DnbDrumPatterns){
         kick: kick && new DrumPattern(kick.name, {numberOfBars, subdivisions, name: `{genre}_${pattern}_snare`, ...kick}),
     }
 
+}
+
+export default {
+    getPattern,
 }
