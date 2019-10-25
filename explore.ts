@@ -17,7 +17,7 @@ const kick = [1,11];
 const snarePattern = new DrumPattern('demo-snare', { when: snare } );
 const kickPattern = new DrumPattern('demo-kick', { when: kick } );
 */
-const drum = getPattern(DnbDrumPatterns.BASIC_1);
+const drum = getPattern(DnbDrumPatterns.BASIC_2);
 
 if (drum){
 console.log(drum.hihat!.show());
