@@ -1,15 +1,11 @@
 import * as scribble from 'scribbletune';
 
 const myChords = 'Am F Dm E Am F Dm E F';
-// const myChords = 'Am F Dm E Am F Dm E Am'
 const myArpOrder = ['1535','6535','1535','1654'];
-//const clips = ['1032', '2032', '4021', '3052'].map(order =>
 const clips = myArpOrder.map(order =>
-    // chane ti 3
     scribble.clip({
         pattern: '[xx][xR]'.repeat(4),
         notes: scribble.arp({
-        //chords: 'Dm BbM Am FM BbM FM CM Gm',
             chords: myChords,
             count: 8,
             order,
@@ -25,7 +21,6 @@ const bass1 = scribble.clip({
     notes: 'A2',
     pattern: '[-xRx][-xRR][-xRx][-xxR]'.repeat(1),
     randomNotes: scribble.scale('A2 minor').filter<string>(removeNonStringFilter).slice(1), 
-    //scribble.scale('A2 minor').slice(1),
     accent: '--x-',
 });
 
@@ -61,7 +56,6 @@ const chordsClip = scribble.clip({
 scribble.midi([].concat(...clips), 'arp.mid');
 
 scribble.midi(chordsClip, 'chords.mid');
-// https://github.com/dinchak/node-easymidi
 
 // kick
 const multiple = 8;

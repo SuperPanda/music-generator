@@ -1,21 +1,24 @@
 import {clip, midi } from 'scribbletune';
 import wu from 'wu';
-import { DnbDrumPatterns } from './DnbPatternCollection';
 
-function _generateDrumPattern(numberOfBars: number, subdivisions: number, when: number[]){
-    const patternTemplate = '-'.repeat(numberOfBars * subdivisions);
-    const pattern = patternTemplate.split('');   
+function _generateDrumPattern(numberOfBars: number, subdivisions: number, when: number[]): string[] {
+    const patternTemplate: string = '-'.repeat(numberOfBars * subdivisions);
+    const pattern: string[] = patternTemplate.split('');   
 
-    return when.reduce((acc, curr) => {
-        if (typeof curr === 'number'){
-            const next = acc;
-            next[curr-1] = 'x';
-            return next;
-        }
-        console.log('unsupported as yet');
-        return acc;
-    },
-    pattern
+    return when.reduce(
+        (
+            acc,
+            curr
+        ) => {
+            if (typeof curr === 'number'){
+                const next: string[] = acc;
+                next[curr-1] = 'x';
+                return next;
+            }
+            console.log('unsupported as yet');
+            return acc;
+        },
+        pattern
     );
 }
 
@@ -27,9 +30,17 @@ export interface DrumPatternOpts {
     name?: string;
 }
 
+interface MergeInfo {
+    numberOfBars: number;
+    pattern: string[];
+    subdivisions: number;
+    repeat: number;
+    when: number[];
+};
+
 export default class DrumPattern {
 
-    static mergePattern(pattern1: DrumPattern, pattern2: DrumPattern, name: string) {
+    static mergePattern(pattern1: DrumPattern, pattern2: DrumPattern, name: string): DrumPattern {
         const pattern1Info = pattern1.mergeInfo();
         const pattern2Info = pattern2.mergeInfo();
         if (pattern1Info.subdivisions !== pattern2Info.subdivisions){
@@ -62,14 +73,14 @@ export default class DrumPattern {
 
     private _numberOfBars: number;
     private _subdivisions: number;
-    //private pattern: string[];
     private _when: number[];
     private _name: string;
     private _repeat: number;
     constructor(name = 'emptydrums', drumPatternOpts?: DrumPatternOpts){
-        this._numberOfBars = drumPatternOpts!.numberOfBars || 1;
-        this._subdivisions = drumPatternOpts!.subdivisions || 16;
-        this._name = drumPatternOpts!.name || name;
+        const { numberOfBars, subdivisions, name: _overrideName, repeat, when } = drumPatternOpts || {};
+        this._numberOfBars = numberOfBars || 1;
+        this._subdivisions = subdivisions || 16;
+        this._name = _overrideName || name;
         
         // should add some checks
         if (drumPatternOpts && Array.isArray(drumPatternOpts.when) && Array.isArray(drumPatternOpts.when[0])){
@@ -79,37 +90,36 @@ export default class DrumPattern {
                 (acc: number[], curr: number[]) => [...acc, ...curr], []);
             
         } else {
-            const _when = drumPatternOpts!.when as number[] | undefined;
+            const _when = when as number[] | undefined;
             this._when = _when || [];
         }
-        //this.pattern = _generateDrumPattern(this.numberOfBars, this.subdivisions, drumPatternOpts!.when || [])
-        this._repeat = drumPatternOpts!.repeat || 1;
+        this._repeat = repeat || 1;
     }
 
-    show(){
+    show(): string{
         return this.pattern.join('').repeat(this._repeat);
     }
     
-    get pattern() {
+    get pattern(): string[] {
         return _generateDrumPattern(this._numberOfBars, this._subdivisions, this._when);        
     }
 
     set repeat(repeat: number){
         this._repeat = repeat;
     }
-    get repeat(){
+    get repeat(): number{
         return this._repeat;
     }
 
-    get numberOfBars(){
+    get numberOfBars(): number{
         return this._numberOfBars * this._repeat;
     }
 
-    get subdivisions(){
+    get subdivisions(): number{
         return this._subdivisions;
     }
 
-    save(name? : string){
+    save(name? : string): void{
         const filename = name || this._name;
         midi(clip({
             notes: 'c4',
@@ -118,11 +128,11 @@ export default class DrumPattern {
         }), (filename.endsWith('.mid') ? filename : filename + '.mid'));
     }
 
-    generate(when: number[]){
-        this._when = when;//_generateDrumPattern(this.numberOfBars, this.subdivisions, when);
+    generate(when: number[]): void{
+        this._when = when;
     }
 
-    mergeInfo(){
+    mergeInfo(): MergeInfo {
         return {
             numberOfBars: this._numberOfBars,
             pattern: this.pattern,

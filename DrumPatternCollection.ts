@@ -1,6 +1,5 @@
 import DrumPattern from './DrumPattern';
 
-
 export interface DrumPatternCollection {
     hihat?: DrumPattern;
     kick?: DrumPattern;
@@ -39,7 +38,7 @@ export function repeatDrumPatternCollection(patternCollection: DrumPatternCollec
     return newCollection;
 }
 
-export function saveDrumPatternCollection(patternCollection: DrumPatternCollection, collectionName?: string) {
+export function saveDrumPatternCollection(patternCollection: DrumPatternCollection, collectionName?: string): void {
     if (patternCollection.hihat)
         patternCollection.hihat.save(collectionName ? collectionName + '_hihat' : undefined);
     if (patternCollection.snare)
@@ -49,22 +48,21 @@ export function saveDrumPatternCollection(patternCollection: DrumPatternCollecti
 }
 
 export function mergeDrumPatternCollection(patternCollection1: DrumPatternCollection, patternCollection2: DrumPatternCollection, name = 'unnamed_collection'): DrumPatternCollection {
+
     if (!patternCollection1 || !patternCollection2) {
         throw new Error('No collection provided');
     }
         
     const { hihat: hihat1, snare: snare1, kick: kick1 } = patternCollection1;
     const { hihat: hihat2, snare: snare2, kick: kick2 } = patternCollection2;
-    // TODO: renormalize
+
     const collection1 = [hihat1, snare1, kick1];
     const collection2 = [hihat2, snare2, kick2];
         
     const removeEmptyFilter = (value: DrumPattern | undefined ): value is DrumPattern => !!value;
-  
-    /////////////
+    // TODO: SHOULD ADD ADD CHECK FOR SUBDIVISIONS
     const collection1NumBars = Math.max(...(collection1.filter(removeEmptyFilter).map(instrument => instrument.numberOfBars * instrument.repeat)));
     const collection2NumBars = Math.max(...(collection2.filter(removeEmptyFilter).map(instrument => instrument.numberOfBars * instrument.repeat)));
-    // TODO: re-calculate later
     const collection1Subdivisions = Math.max(...(collection1.filter(removeEmptyFilter).map(instrument => instrument.subdivisions)));
     const collection2Subdivisions = Math.max(...(collection2.filter(removeEmptyFilter).map(instrument => instrument.subdivisions)));
 
@@ -73,7 +71,7 @@ export function mergeDrumPatternCollection(patternCollection1: DrumPatternCollec
         throw new Error('Unequal measures of drums in same collection not currently supported for merge ' + JSON.stringify(measuresOfCollection1));
     }
 
-    // TODO: renormalize
+    // TODO: RENORMALIZE THE BEATS WHEN MERGING DIFFERENT SUBDIVISIONS
  
     const measuresOfCollection2 = collection2.filter(removeEmptyFilter).map(instrument => instrument.numberOfBars * instrument.subdivisions);
     if (measuresOfCollection2.filter(value => value !== Math.max(...measuresOfCollection2)).length > 0){
@@ -84,7 +82,7 @@ export function mergeDrumPatternCollection(patternCollection1: DrumPatternCollec
             initialise it so the tracks line up */
 
     // Refactor into a reducer for extensibility
-    const isAvailable = (obj: DrumPattern | undefined) => !!obj;
+    const isAvailable = (obj: DrumPattern | undefined): boolean => !!obj;
     const mutableObjs: { [idx: string]: MutableObj<DrumPattern>} = {
         hihat1: {
             obj: hihat1,
@@ -115,7 +113,6 @@ export function mergeDrumPatternCollection(patternCollection1: DrumPatternCollec
 
     pairs.forEach(
         (pair: MutableObj<DrumPattern>[], idx: number, arr: MutableObj<DrumPattern>[][] ) => {
-            //console.log(pair[0].exists, pair[1].exists)
             if (!(pair[0].exists) && (pair[1].exists)){
                 arr[idx][0].obj = new DrumPattern(
                     name,
@@ -138,16 +135,12 @@ export function mergeDrumPatternCollection(patternCollection1: DrumPatternCollec
             }
         }
     );
-    // console.log(JSON.stringify(pairs, null, 2));
 
     // sub division error conditions is in the merge function
-    // const maxRepeatsForPatternCollection1 = Math.max(hithat1.repeat, snare1.repeat, kick1.repeat);
-    // const maxRepeatsForPatternCollection2 = Math.max(hithat2.repeat, snare2.repeat, kick2.repeat);
-    // console.log(mutableObjs);
     return {
-        hihat: mutableObjs.hihat1.exists ? DrumPattern.mergePattern(<DrumPattern> mutableObjs.hihat1.obj, <DrumPattern> mutableObjs.hihat2.obj, name+'_hihat') : undefined, 
-        kick: mutableObjs.kick1.exists ? DrumPattern.mergePattern(<DrumPattern> mutableObjs.kick1.obj, <DrumPattern> mutableObjs.kick2.obj, name+'_kick') : undefined,
-        snare: mutableObjs.snare1.exists ? DrumPattern.mergePattern(<DrumPattern> mutableObjs.snare1.obj, <DrumPattern> mutableObjs.snare2.obj, name+'_snare') : undefined,  
+        hihat: mutableObjs.hihat1.exists ? DrumPattern.mergePattern(mutableObjs.hihat1.obj as DrumPattern, mutableObjs.hihat2.obj as DrumPattern, name+'_hihat') : undefined, 
+        kick: mutableObjs.kick1.exists ? DrumPattern.mergePattern(mutableObjs.kick1.obj as DrumPattern, mutableObjs.kick2.obj as DrumPattern, name+'_kick') : undefined,
+        snare: mutableObjs.snare1.exists ? DrumPattern.mergePattern(mutableObjs.snare1.obj as DrumPattern, mutableObjs.snare2.obj as DrumPattern, name+'_snare') : undefined,  
     };
 }
 
@@ -166,19 +159,19 @@ function curry(mergeFunc: MergeFunction, repeatFunc: RepeatFunction): Curry {
 }
 
 
-function merge(arrayOfDrumPatterns: DrumPatternCollection[], name: string){
+function merge(arrayOfDrumPatterns: DrumPatternCollection[], name: string): DrumPatternCollection{
     const [firstDrumPattern, ...restOfDrumPatterns] = arrayOfDrumPatterns;  
     if (restOfDrumPatterns.length === 0)
         return firstDrumPattern;
     
     return restOfDrumPatterns.reduce(
-        function(acc: DrumPatternCollection, curr: DrumPatternCollection, idx: number, arrayOfDrumPatterns: DrumPatternCollection[]): DrumPatternCollection {
+        function(acc: DrumPatternCollection, curr: DrumPatternCollection): DrumPatternCollection {
             return mergeDrumPatternCollection(acc, curr, name);
         }
         , firstDrumPattern); 
 }
 
-const repeat = (element: [DrumPatternCollection, number?]) => {
+const repeat = (element: [DrumPatternCollection, number?]): DrumPatternCollection => {
     return repeatDrumPatternCollection(element[0], element[1] || 1);
 };
 
