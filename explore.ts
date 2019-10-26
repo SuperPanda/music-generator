@@ -48,11 +48,35 @@ if (p1 && p1.kick && p2 && p2.kick)  {
     console.log(newPattern.show());
 }*/
 const p1 = getPattern(DnbDrumPatterns.BREAKBEAT_1);
-const p2 = getPattern(DnbDrumPatterns.BREAKBEAT_2);
-const p3 = getPattern(DnbDrumPatterns.EXTENDED_1);
+const p2 = getPattern(DnbDrumPatterns.BASIC_HIHAT_1);
 //const newPattern = DrumPattern.mergePattern(p1.kick, p2.kick, 'test');
-if (p1 && p2 && p3) {
-    const a = DrumPattern.mergeDrumPatternCollection(p1, p2);
-    const b = DrumPattern.mergeDrumPatternCollection(a, p3);
-    DrumPattern.saveDrumPatternCollection(b);
+// need a mix function
+if (p1 && p2) {
+    // p1
+    // -----------------
+    // ---x----x---x----
+    // --x-x-x--x-x---x-
+    // p2 
+    // ---x-x--x---x-x--
+    // ----------------
+    // ----------------
+    // p3 = mix p1 , p2
+    // --x-x-x--x--x-x-x-
+    // --x-x-x-x--x-x-x--
+    // ---x-x-x-x-x-x-x--
+    // should change name to concat
+    // p4 = merge p1, p2
+    // -------------------x---x-x--x-x-x---x-
+    // ---x-x---x--x-x-x---------------------
+    // ---x-x--x-x-x-x-x--------------------
+    const p3 = {
+        hihat: p2.hihat,
+        kick: p1.kick,
+        snare: p1.snare,
+    }
+    DrumPattern.showDrumPatternCollection(p3);
+    const p4 = DrumPattern.mergeDrumPatternCollection(p1, p2, 'mix');
+    DrumPattern.showDrumPatternCollection(p4);
+
+    //DrumPattern.saveDrumPatternCollection({...p1, ...p2}, 'mix');
 }

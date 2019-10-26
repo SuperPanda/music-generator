@@ -1,4 +1,4 @@
-import DrumPattern from './DrumPattern';
+import DrumPattern, { DrumPatternCollection } from './DrumPattern';
 
 const genre = 'dnb';
 // TODO: generate collection from JSON or yaml files
@@ -14,6 +14,11 @@ export enum DnbDrumPatterns {
     EXTENDED_3 = 'extended3',
     BREAKOUT_1 = 'breakout1',
     BREAKOUT_2 = 'breakout2',
+    BREAKOUT_3 = 'breakout3',
+    BREAKOUT_4 = 'breakout4',
+    BREAKOUT_5 = 'breakout5',
+    EXTENDED_BREAKOUT_1 = 'extendedbreakout1',
+    BASIC_HIHAT_1 = 'basichithat1',
 }
 
 interface DrumPatternInstrumentOptions {
@@ -26,10 +31,12 @@ interface DrumPatternInstrumentOptions {
 interface DrumPatternFields {
     numberOfBars?: number;
     subdivisions?: number;
-    hihat: DrumPatternInstrumentOptions;
-    snare: DrumPatternInstrumentOptions;
-    kick: DrumPatternInstrumentOptions;
+    hihat?: DrumPatternInstrumentOptions;
+    snare?: DrumPatternInstrumentOptions;
+    kick?: DrumPatternInstrumentOptions;
 }
+
+// Graciously adapted from: https://music.tutsplus.com/tutorials/making-the-beat-drum-n-bass-drums--audio-8697
 
 const patterns: { [key in DnbDrumPatterns]? : DrumPatternFields } = {
   [DnbDrumPatterns.BASIC_1]: {
@@ -106,10 +113,7 @@ const patterns: { [key in DnbDrumPatterns]? : DrumPatternFields } = {
     }
   },
 
-  [DnbDrumPatterns.EXTENDED_1]: {
-    hihat: {
-        when: [],
-    },
+  [DnbDrumPatterns.EXTENDED_1]: { // # 5
     snare: {
         when: [[5, 15], [7, 13]],
     },
@@ -119,60 +123,93 @@ const patterns: { [key in DnbDrumPatterns]? : DrumPatternFields } = {
     numberOfBars: 2,
   },
 
-  [DnbDrumPatterns.EXTENDED_2]: {
-    hihat: {
-        when: [],
-    },
+  [DnbDrumPatterns.EXTENDED_2]: { // # 6
     snare: {
-        when: [],
+        when: [[5, 11],[3, 11]],
     },
     kick: {
-        when: [],
-    }
+        when: [[1,7,13],[7,3]],
+    },
+    numberOfBars: 2,
   },
 
   [DnbDrumPatterns.EXTENDED_3]: {
-    hihat: {
-        when: [],
-    },
     snare: {
-        when: [],
+        when: [[5,13],[5,11]],
     },
     kick: {
-        when: [],
-    }
+        when: [[1,11],[1,7,9]],
+    },
+    numberOfBars: 2,
   },
 
   [DnbDrumPatterns.BREAKOUT_1]: {
-    hihat: {
-        when: [],
-    },
     snare: {
-        when: [],
+        when: [5, 8, 10, 13],
     },
     kick: {
-        when: [],
+        when: [1, 11],
     }
   },
 
   
-  [DnbDrumPatterns.BREAKOUT_2]: {
-    hihat: {
-        when: [],
-    },
+  [DnbDrumPatterns.BREAKOUT_2]: { // # 9
     snare: {
-        when: [],
+        when: [5,8,10,15],
     },
     kick: {
-        when: [],
+        when: [1,11],
     }
   },
   
+  
+  [DnbDrumPatterns.BREAKOUT_3]: { 
+    snare: {
+        when: [1,2,7,13],
+    },
+    kick: {
+        when: [3,9],
+    }
+  },
+
+  [DnbDrumPatterns.BREAKOUT_4]: { 
+    snare: {
+        when: [13, 16],
+    },
+    kick: {
+        when: [1,7,9],
+    }
+  },
+
+  [DnbDrumPatterns.BREAKOUT_5]: { // # 12 
+    snare: {
+        when: [2,5,8,11],
+    },
+    kick: {
+        when: [3,9,13],
+    }
+  },
+
+  [DnbDrumPatterns.EXTENDED_BREAKOUT_1]: { // # 13
+    snare: {
+        when: [[2,5,8,11],[2,5,8,11]],
+    },  
+    kick: {
+        when: [[3,9,13,15],[3,9]],
+    },
+    numberOfBars: 2,
+  },
+  // # 14, # 15 use timbre shifts - not sure which channel to add too
+  [DnbDrumPatterns.BASIC_HIHAT_1]: { // 16
+    hihat: {
+        when: [1,3,5,7,9,10,11,13,15],            
+    },
+  }
 };
 
 
 
-export function getPattern(pattern: DnbDrumPatterns){
+export function getPattern(pattern: DnbDrumPatterns): DrumPatternCollection | undefined{
     let chosenPattern;
 
     if (Object.keys(patterns).includes(pattern)){
@@ -180,16 +217,19 @@ export function getPattern(pattern: DnbDrumPatterns){
     }
 
     if (!chosenPattern) return undefined;
-    const { kick, snare, hihat, numberOfBars = 1, subdivisions = 16 } = chosenPattern;
-    
+    let { kick, snare, hihat, numberOfBars = 1, subdivisions = 16 } = chosenPattern;
+    // hihat = hihat || { when: (numberOfBars === 1 ? [] : Array(numberOfBars).fill([]))};
+    // snare = snare || { when: (numberOfBars === 1 ? [] : Array(numberOfBars).fill([]))};
+    // kick = kick || { when: (numberOfBars === 1 ? [] : Array(numberOfBars).fill([]))};
     return {
-        hihat: new DrumPattern(hihat.name, {numberOfBars, subdivisions, name: `${genre}_${pattern}_hihat`, ...hihat}),
-        snare: new DrumPattern(snare.name, {numberOfBars, name: `${genre}_${pattern}_snare`, subdivisions, ...snare}),
-        kick: new DrumPattern(kick.name, {numberOfBars, subdivisions, name: `{genre}_${pattern}_snare`, ...kick}),
+        hihat: hihat ? new DrumPattern(`${genre}_${pattern}_hihat`, {numberOfBars, subdivisions, ...hihat}) : undefined,
+        snare: snare ? new DrumPattern(`${genre}_${pattern}_snare`, {numberOfBars, subdivisions, ...snare}) : undefined,
+        kick: kick ? new DrumPattern(`${genre}_${pattern}_kick`, {numberOfBars, subdivisions, ...kick}) : undefined,
     }
 
 }
 
 export default {
     getPattern,
+    DnbDrumPatterns
 }

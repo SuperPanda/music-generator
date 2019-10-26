@@ -28,14 +28,20 @@ export interface DrumPatternOpts {
 };
 
 export interface DrumPatternCollection {
-    hihat: DrumPattern;
-    kick: DrumPattern;
-    snare: DrumPattern;
+    hihat?: DrumPattern;
+    kick?: DrumPattern;
+    snare?: DrumPattern;
 };
 
+interface MutableObj<T> {
+    exists: boolean;
+    obj: T | undefined;
+} 
 export default class DrumPattern {
 
     public static mergePattern(pattern1: DrumPattern, pattern2: DrumPattern, name: string) {
+        // console.log(JSON.stringify(pattern1));
+        // console.log(JSON.stringify(pattern2));
         const pattern1Info = pattern1._mergeInfo();
         const pattern2Info = pattern2._mergeInfo();
         if (pattern1Info.subdivisions !== pattern2Info.subdivisions){
@@ -66,22 +72,29 @@ export default class DrumPattern {
 
     }
     public static showDrumPatternCollection(patternCollection1: DrumPatternCollection): void{
-        console.log(patternCollection1.hihat.show())
-        console.log(patternCollection1.kick.show())
-        console.log(patternCollection1.snare.show())
+        if (patternCollection1.hihat)
+            console.log(patternCollection1.hihat.show())
+        if (patternCollection1.snare)
+            console.log(patternCollection1.snare.show())
+          if (patternCollection1.kick)
+            console.log(patternCollection1.kick.show())
+
         return;
     }
     public static updateDrumPatternCollectionRepeat(patternCollection: DrumPatternCollection, repeat: number): void {
-        patternCollection.hihat.repeat = repeat;
-        patternCollection.kick.repeat = repeat;
-        patternCollection.snare.repeat = repeat;
+        patternCollection.hihat!.repeat = repeat;
+        patternCollection.kick!.repeat = repeat;
+        patternCollection.snare!.repeat = repeat;
         return;
     }
 
-    public static saveDrumPatternCollection(patternCollection: DrumPatternCollection) {
-        patternCollection.hihat.save();
-        patternCollection.snare.save();
-        patternCollection.kick.save();
+    public static saveDrumPatternCollection(patternCollection: DrumPatternCollection, collectionName?: string) {
+        if (patternCollection.hihat)
+            patternCollection.hihat.save(collectionName ? collectionName + '_hihat' : undefined);
+        if (patternCollection.snare)
+            patternCollection.snare.save(collectionName ? collectionName + '_snare' : undefined);
+        if (patternCollection.kick)
+            patternCollection.kick.save(collectionName ? collectionName + '_kick' : undefined);
     }
 
     public static mergeDrumPatternCollection(patternCollection1: DrumPatternCollection, patternCollection2: DrumPatternCollection, name: string = 'unnamed_collection'): DrumPatternCollection {
@@ -89,30 +102,102 @@ export default class DrumPattern {
             throw new Error("No collection provided");
         }
         
-        let { hihat: hithat1, snare: snare1, kick: kick1 } = patternCollection1;
+        let { hihat: hihat1, snare: snare1, kick: kick1 } = patternCollection1;
+        let { hihat: hihat2, snare: snare2, kick: kick2 } = patternCollection2;
         // TODO: renormalize
-        const collection1 = [hithat1, snare1, kick1];
-        const measuresOfCollection1 = collection1.map(instrument => (instrument.repeat * instrument.numberOfBars * instrument.subdivisions));
+        const collection1 = [hihat1, snare1, kick1];
+        const collection2 = [hihat2, snare2, kick2];
+        
+        const removeEmptyFilter = (value: DrumPattern | undefined ): value is DrumPattern => !!value;
+  
+        /////////////
+        let collection1NumBars = Math.max.apply(this, collection1.filter(removeEmptyFilter).map(instrument => instrument.numberOfBars));
+        let collection2NumBars = Math.max.apply(this, collection2.filter(removeEmptyFilter).map(instrument => instrument.numberOfBars));
+        // TODO: re-calculate later
+        let collection1Subdivisions = Math.max.apply(this, collection1.filter(removeEmptyFilter).map(instrument => instrument.subdivisions));
+        let collection2Subdivisions = Math.max.apply(this, collection2.filter(removeEmptyFilter).map(instrument => instrument.subdivisions));
+
+        const measuresOfCollection1 = collection1.filter(removeEmptyFilter).map(instrument => (instrument.repeat * instrument.numberOfBars * instrument.subdivisions));
         if (measuresOfCollection1.filter(value => value !== Math.max.apply(this, measuresOfCollection1)).length !== 0){
             throw new Error("Unequal measures of drums in same collection not currently supported for merge " + JSON.stringify(measuresOfCollection1));
         }
 
-        let { hihat: hithat2, snare: snare2, kick: kick2 } = patternCollection2;
+     
         // TODO: renormalize
-        const collection2 = [hithat2, snare2, kick2];
-        const measuresOfCollection2 = collection2.map(instrument => instrument.repeat * instrument.numberOfBars * instrument.subdivisions);
+ 
+        const measuresOfCollection2 = collection2.filter(removeEmptyFilter).map(instrument => instrument.repeat * instrument.numberOfBars * instrument.subdivisions);
         if (measuresOfCollection2.filter(value => value !== Math.max.apply(this, measuresOfCollection2)).length > 0){
             throw new Error("Unequal measures of drums in same collection not currently supported for merge" + JSON.stringify(measuresOfCollection2));
         }
 
+        /* if a track exists on one of the objects but not the other,
+            initialise it so the tracks line up */
+
+        // Refactor into a reducer for extensibility
+        const isAvailable = (obj: DrumPattern | undefined) => !!obj;
+        let mutableObjs: { [idx: string] : MutableObj<DrumPattern>} = {
+            hihat1: {
+                obj: hihat1,
+                exists: isAvailable(hihat1),
+            } ,
+            hihat2: {
+                obj: hihat2,
+                exists: isAvailable(hihat2),
+            },
+            snare1: {
+                obj: snare1,
+                exists: isAvailable(snare1),
+            },
+            snare2: {
+                obj: snare2,
+                exists: isAvailable(snare2),
+            },
+            kick1: {
+                obj: kick1,
+                exists: isAvailable(kick1),
+            },
+            kick2: {
+                obj: kick2,
+                exists: isAvailable(kick2),
+            },
+        };
+        let pairs = [[mutableObjs.hihat1, mutableObjs.hihat2], [mutableObjs.snare1, mutableObjs.snare2], [mutableObjs.kick1, mutableObjs.kick2]];
+
+        pairs.forEach(
+            (pair: MutableObj<DrumPattern>[], idx: number, arr: MutableObj<DrumPattern>[][] ) => {
+                //console.log(pair[0].exists, pair[1].exists)
+                if (!(pair[0].exists) && (pair[1].exists)){
+                    arr[idx][0].obj = new DrumPattern(
+                        name,
+                        {
+                          when: [],
+                          subdivisions: collection1Subdivisions,
+                          numberOfBars: collection1NumBars,
+                          
+                        }
+                    );
+                } else if (!(pair[1].exists) && (pair[0].exists)){
+                    arr[idx][1].obj = new DrumPattern(
+                        name,
+                        {
+                          when: [],
+                          subdivisions: collection2Subdivisions,
+                          numberOfBars: collection2NumBars,
+                        }
+                    );
+                }
+            }, this
+        )
+        // console.log(JSON.stringify(pairs, null, 2));
+
         // sub division error conditions is in the merge function
         // const maxRepeatsForPatternCollection1 = Math.max(hithat1.repeat, snare1.repeat, kick1.repeat);
         // const maxRepeatsForPatternCollection2 = Math.max(hithat2.repeat, snare2.repeat, kick2.repeat);
-        
+        // console.log(mutableObjs);
         return {
-            hihat: DrumPattern.mergePattern(hithat1, hithat2, name+'_hihat'), 
-            kick: DrumPattern.mergePattern(kick1, kick2, name+'_kick'),
-            snare: DrumPattern.mergePattern(snare1, snare2, name+'_snare'),         
+            hihat: mutableObjs.hihat1.exists ? DrumPattern.mergePattern(<DrumPattern> mutableObjs.hihat1.obj, <DrumPattern> mutableObjs.hihat2.obj, name+'_hihat') : undefined, 
+            kick: mutableObjs.kick1.exists ? DrumPattern.mergePattern(<DrumPattern> mutableObjs.kick1.obj, <DrumPattern> mutableObjs.kick2.obj, name+'_kick') : undefined,
+            snare: mutableObjs.snare1.exists ? DrumPattern.mergePattern(<DrumPattern> mutableObjs.snare1.obj, <DrumPattern> mutableObjs.snare2.obj, name+'_snare') : undefined,  
         }
     }
 
@@ -123,7 +208,6 @@ export default class DrumPattern {
     private when: number[];
     private filename: string;
     public repeat: number;
-    
     constructor(name: string = 'emptydrums', drumPatternOpts?: DrumPatternOpts){
         this.numberOfBars = drumPatternOpts!.numberOfBars || 1;
         this.subdivisions = drumPatternOpts!.subdivisions || 16;
@@ -147,17 +231,18 @@ export default class DrumPattern {
     show(){
         return this.pattern.join('').repeat(this.repeat);
     }
-
+    
     get pattern() {
         return _generateDrumPattern(this.numberOfBars, this.subdivisions, this.when)        
     }
 
-    save(){
+    save(name? : string){
+        let filename = name || this.filename;
         midi(clip({
             notes: 'c4',
             pattern: this.show(),
             subdiv: `${this.subdivisions}n`,
-        }), (this.filename.endsWith('.mid') ? this.filename : this.filename + '.mid'))
+        }), (filename.endsWith('.mid') ? filename : filename + '.mid'))
     }
 
     generate(when: number[]){
