@@ -252,8 +252,3 @@ export function getPattern(
       : undefined,
   };
 }
-
-export default {
-  getPattern,
-  DnbDrumPatterns,
-};
