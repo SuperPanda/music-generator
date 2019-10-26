@@ -218,7 +218,7 @@ export function getPattern(pattern: DnbDrumPatterns): DrumPatternCollection | un
     }
 
     if (!chosenPattern) return undefined;
-    let { kick, snare, hihat, numberOfBars = 1, subdivisions = 16 } = chosenPattern;
+    const { kick, snare, hihat, numberOfBars = 1, subdivisions = 16 } = chosenPattern;
     // hihat = hihat || { when: (numberOfBars === 1 ? [] : Array(numberOfBars).fill([]))};
     // snare = snare || { when: (numberOfBars === 1 ? [] : Array(numberOfBars).fill([]))};
     // kick = kick || { when: (numberOfBars === 1 ? [] : Array(numberOfBars).fill([]))};

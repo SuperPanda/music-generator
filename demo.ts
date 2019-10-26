@@ -21,7 +21,7 @@ const clips = myArpOrder.map(order =>
 
 const removeNonStringFilter = (value: string | null): value is string => typeof value === 'string';
   
-let bass1 = scribble.clip({
+const bass1 = scribble.clip({
     notes: 'A2',
     pattern: '[-xRx][-xRR][-xRx][-xxR]'.repeat(1),
     randomNotes: scribble.scale('A2 minor').filter<string>(removeNonStringFilter).slice(1), 
@@ -29,19 +29,19 @@ let bass1 = scribble.clip({
     accent: '--x-',
 });
 
-let bass2 = scribble.clip({
+const bass2 = scribble.clip({
     notes: 'F2',
     pattern: '[-xRx][-xRR][-xRx][-xxR]'.repeat(1),
     randomNotes: scribble.scale('F2 major').filter<string>(removeNonStringFilter).slice(2,5),
     accent: '--x-',
 });
-let bass3 = scribble.clip({
+const bass3 = scribble.clip({
     notes: 'D2',
     pattern: '[-xRx][-xRR][-xRx][-xxR]'.repeat(1),
     randomNotes: scribble.scale('D2 minor').filter<string>(removeNonStringFilter).slice(2,5),
     accent: '--x-',
 });
-let bass4 = scribble.clip({
+const bass4 = scribble.clip({
     notes: 'E2',
     pattern: '[-xRx][-xRR][-xRx][-xxR]'.repeat(1),
     randomNotes: scribble.scale('E2 major').filter<string>(removeNonStringFilter).slice(2,5),

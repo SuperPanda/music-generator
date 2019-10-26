@@ -48,13 +48,13 @@ export function saveDrumPatternCollection(patternCollection: DrumPatternCollecti
         patternCollection.kick.save(collectionName ? collectionName + '_kick' : undefined);
 }
 
-export function mergeDrumPatternCollection(patternCollection1: DrumPatternCollection, patternCollection2: DrumPatternCollection, name: string = 'unnamed_collection'): DrumPatternCollection {
+export function mergeDrumPatternCollection(patternCollection1: DrumPatternCollection, patternCollection2: DrumPatternCollection, name = 'unnamed_collection'): DrumPatternCollection {
     if (!patternCollection1 || !patternCollection2) {
         throw new Error('No collection provided');
     }
         
-    let { hihat: hihat1, snare: snare1, kick: kick1 } = patternCollection1;
-    let { hihat: hihat2, snare: snare2, kick: kick2 } = patternCollection2;
+    const { hihat: hihat1, snare: snare1, kick: kick1 } = patternCollection1;
+    const { hihat: hihat2, snare: snare2, kick: kick2 } = patternCollection2;
     // TODO: renormalize
     const collection1 = [hihat1, snare1, kick1];
     const collection2 = [hihat2, snare2, kick2];
@@ -62,11 +62,11 @@ export function mergeDrumPatternCollection(patternCollection1: DrumPatternCollec
     const removeEmptyFilter = (value: DrumPattern | undefined ): value is DrumPattern => !!value;
   
     /////////////
-    let collection1NumBars = Math.max(...(collection1.filter(removeEmptyFilter).map(instrument => instrument.numberOfBars * instrument.repeat)));
-    let collection2NumBars = Math.max(...(collection2.filter(removeEmptyFilter).map(instrument => instrument.numberOfBars * instrument.repeat)));
+    const collection1NumBars = Math.max(...(collection1.filter(removeEmptyFilter).map(instrument => instrument.numberOfBars * instrument.repeat)));
+    const collection2NumBars = Math.max(...(collection2.filter(removeEmptyFilter).map(instrument => instrument.numberOfBars * instrument.repeat)));
     // TODO: re-calculate later
-    let collection1Subdivisions = Math.max(...(collection1.filter(removeEmptyFilter).map(instrument => instrument.subdivisions)));
-    let collection2Subdivisions = Math.max(...(collection2.filter(removeEmptyFilter).map(instrument => instrument.subdivisions)));
+    const collection1Subdivisions = Math.max(...(collection1.filter(removeEmptyFilter).map(instrument => instrument.subdivisions)));
+    const collection2Subdivisions = Math.max(...(collection2.filter(removeEmptyFilter).map(instrument => instrument.subdivisions)));
 
     const measuresOfCollection1 = collection1.filter(removeEmptyFilter).map(instrument => (instrument.repeat * instrument.numberOfBars * instrument.subdivisions));
     if (measuresOfCollection1.filter(value => value !== Math.max(...measuresOfCollection1)).length !== 0){
@@ -85,7 +85,7 @@ export function mergeDrumPatternCollection(patternCollection1: DrumPatternCollec
 
     // Refactor into a reducer for extensibility
     const isAvailable = (obj: DrumPattern | undefined) => !!obj;
-    let mutableObjs: { [idx: string] : MutableObj<DrumPattern>} = {
+    const mutableObjs: { [idx: string]: MutableObj<DrumPattern>} = {
         hihat1: {
             obj: hihat1,
             exists: isAvailable(hihat1),
@@ -111,7 +111,7 @@ export function mergeDrumPatternCollection(patternCollection1: DrumPatternCollec
             exists: isAvailable(kick2),
         },
     };
-    let pairs = [[mutableObjs.hihat1, mutableObjs.hihat2], [mutableObjs.snare1, mutableObjs.snare2], [mutableObjs.kick1, mutableObjs.kick2]];
+    const pairs = [[mutableObjs.hihat1, mutableObjs.hihat2], [mutableObjs.snare1, mutableObjs.snare2], [mutableObjs.kick1, mutableObjs.kick2]];
 
     pairs.forEach(
         (pair: MutableObj<DrumPattern>[], idx: number, arr: MutableObj<DrumPattern>[][] ) => {

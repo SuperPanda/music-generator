@@ -8,7 +8,7 @@ function _generateDrumPattern(numberOfBars: number, subdivisions: number, when: 
 
     return when.reduce((acc, curr) => {
         if (typeof curr === 'number'){
-            let next = acc;
+            const next = acc;
             next[curr-1] = 'x';
             return next;
         }
@@ -66,7 +66,7 @@ export default class DrumPattern {
     private _when: number[];
     private _name: string;
     private _repeat: number;
-    constructor(name: string = 'emptydrums', drumPatternOpts?: DrumPatternOpts){
+    constructor(name = 'emptydrums', drumPatternOpts?: DrumPatternOpts){
         this._numberOfBars = drumPatternOpts!.numberOfBars || 1;
         this._subdivisions = drumPatternOpts!.subdivisions || 16;
         this._name = drumPatternOpts!.name || name;
@@ -110,7 +110,7 @@ export default class DrumPattern {
     }
 
     save(name? : string){
-        let filename = name || this._name;
+        const filename = name || this._name;
         midi(clip({
             notes: 'c4',
             pattern: this.show(),
