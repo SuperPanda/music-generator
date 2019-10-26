@@ -1,4 +1,5 @@
-import DrumPattern, { DrumPatternCollection } from './DrumPattern';
+import DrumPattern from './DrumPattern';
+import { DrumPatternCollection } from './DrumPatternCollection';
 
 const genre = 'dnb';
 // TODO: generate collection from JSON or yaml files
@@ -232,5 +233,5 @@ export function getPattern(pattern: DnbDrumPatterns): DrumPatternCollection | un
 
 export default {
     getPattern,
-    DnbDrumPatterns
+    DnbDrumPatterns,
 }

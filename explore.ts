@@ -1,7 +1,8 @@
 import {getChordsByProgression, clip, midi } from "scribbletune"
 import DrumPattern from './DrumPattern';
 import { getPattern, DnbDrumPatterns } from './DnbPatternCollection';
-import { DrumPatternCollection } from './DrumPattern';
+import { showDrumPatternCollection, saveDrumPatternCollection, trackBuilder } from "./DrumPatternCollection";
+
 
 
 /* 
@@ -98,34 +99,6 @@ if (p1 && p1.kick && p2 && p2.kick)  {
         mergeFunc(inputArray.map(element => elementFunc(element)))
   */
  
-type MergeFunction = (arrayOfDrumPatterns: DrumPatternCollection[], name: string) => DrumPatternCollection;
-type RepeatFunction = (patternAndRepeat: [DrumPatternCollection, number?]) => DrumPatternCollection;  
-type InputArray = [DrumPatternCollection, number?][]
-type Result = DrumPatternCollection;
-type Curry = (inputArr: InputArray, name: string) => Result;
-function curry(mergeFunc: MergeFunction, repeatFunc: RepeatFunction): Curry {
-    return (inputArr: InputArray, name: string ) =>
-        mergeFunc(inputArr.map((element: [DrumPatternCollection, number?]): DrumPatternCollection => 
-            repeatFunc(element)), name);
-}
-
-  const merge = (arrayOfDrumPatterns: DrumPatternCollection[], name: string) => {
-    const [firstDrumPattern, ...restOfDrumPatterns] = arrayOfDrumPatterns;  
-    if (restOfDrumPatterns.length === 0)
-        return firstDrumPattern;
-    
-    return restOfDrumPatterns.reduce((acc: DrumPatternCollection, curr: DrumPatternCollection) => {
-        return DrumPattern.mergeDrumPatternCollection(acc, curr, name);
-    }, firstDrumPattern); 
-  }
-
-  const repeat = (element: [DrumPatternCollection, number?]) => {
-      return DrumPattern.repeatDrumPatternCollection(element[0], element[1] || 1);
-  }
-
-  type TrackBuilder = (inputArr: InputArray, name: string) => DrumPatternCollection; 
-  const trackBuilder: TrackBuilder = curry(merge, repeat);
-
   const ext2 = getPattern(DnbDrumPatterns.EXTENDED_1);
   const hh1 = getPattern(DnbDrumPatterns.BASIC_HIHAT_1);
   const bb1 = getPattern(DnbDrumPatterns.BREAKBEAT_3);
@@ -137,19 +110,19 @@ function curry(mergeFunc: MergeFunction, repeatFunc: RepeatFunction): Curry {
 if (ext2 && hh1 && eb2 && bb1 && b1) {
     
     console.log(DnbDrumPatterns.EXTENDED_1);
-    DrumPattern.showDrumPatternCollection(ext2);
+    showDrumPatternCollection(ext2);
     
     console.log(DnbDrumPatterns.BASIC_HIHAT_1);
-    DrumPattern.showDrumPatternCollection(hh1);
+    showDrumPatternCollection(hh1);
     
     console.log(DnbDrumPatterns.BREAKBEAT_3);
-    DrumPattern.showDrumPatternCollection(bb1);
+    showDrumPatternCollection(bb1);
     
     console.log(DnbDrumPatterns.EXTENDED_BREAKOUT_1);
-    DrumPattern.showDrumPatternCollection(eb2);
+    showDrumPatternCollection(eb2);
 
     console.log(DnbDrumPatterns.BASIC_2);
-    DrumPattern.showDrumPatternCollection(b1);
+    showDrumPatternCollection(b1);
 
     // basic hihat x 4
     //const basicHiHat4 = DrumPattern.repeatDrumPatternCollection(p2, 4);
@@ -162,11 +135,11 @@ if (ext2 && hh1 && eb2 && bb1 && b1) {
         kick: track1.kick,
     }
     console.log('track 1');
-    DrumPattern.showDrumPatternCollection(track1);
+    showDrumPatternCollection(track1);
     console.log('track 1');
-    DrumPattern.showDrumPatternCollection(track2);
+    showDrumPatternCollection(track2);
     console.log('track 3');
-    DrumPattern.showDrumPatternCollection(track3);
-    DrumPattern.saveDrumPatternCollection(track3, 'track3');
+    showDrumPatternCollection(track3);
+    saveDrumPatternCollection(track3, 'track3');
     // basic - extended - break
 }
