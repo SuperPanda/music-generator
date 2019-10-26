@@ -9,9 +9,12 @@
     "build": "npx tsc",
     "restart": "npx npm-run-all -s build explore",
     "start": "npx nodemon -e ts,json -w . --exec \"npm run restart \"",
-    "clean": "npx shx rm *.js *.mid",
-    "lint": "npx eslint . --ext=ts",
-    "lint-fix": "npx eslint . --ext=ts --fix"
+    "clean": "npx shx rm *.mid",
+    "lint": "npx npm-run-all -s lint:ts lint:eslint",
+    "lint:eslint": "npx eslint . --ext .ts,.json,.md ",
+    "lint:ts": "tsc --noEmit",
+    "lint:fix": "npx npm-run-all -s -c lint:eslint:fix",
+    "lint:eslint:fix": "npx eslint . --ext .ts,.json,.md --fix"
   },
   "author": "",
   "license": "ISC",
@@ -23,8 +26,13 @@
     "dts-gen": "^0.5.8",
     "eslint": "^6.6.0",
     "eslint-config-prettier": "^6.4.0",
+    "eslint-import-resolver-typescript": "^2.0.0",
     "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-json": "^2.0.1",
+    "eslint-plugin-markdown": "^1.0.1",
     "eslint-plugin-prettier": "^3.1.1",
+    "husky": "^3.0.9",
+    "lint-staged": "^10.0.0-1",
     "nodemon": "^1.19.4",
     "npm-run-all": "^4.1.5",
     "prettier": "^1.18.2",
@@ -35,5 +43,16 @@
   "dependencies": {
     "scribbletune": "github:SuperPanda/scribbletune#explorer",
     "wu": "^2.1.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,js,md,json}": [
+      "npx eslint --ext .ts,.json,.md --fix --",
+      "git add"
+    ]
   }
 }
