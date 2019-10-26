@@ -1,5 +1,6 @@
 import {clip, midi } from "scribbletune"
 import wu from "wu";
+import { DnbDrumPatterns } from './DnbPatternCollection';
 
 function _generateDrumPattern(numberOfBars: number, subdivisions: number, when: number[]){
     const patternTemplate = '-'.repeat(numberOfBars * subdivisions);
@@ -21,19 +22,19 @@ function _generateDrumPattern(numberOfBars: number, subdivisions: number, when: 
 export interface DrumPatternOpts {
     numberOfBars?: number;
     subdivisions?: number;
-    when?: number[];
+    when?: number[] | number[][];
     repeat?: number;
-}
+};
 
 export interface DrumPatternCollection {
     hihat: DrumPattern;
     kick: DrumPattern;
     snare: DrumPattern;
-}
+};
 
 export default class DrumPattern {
 
-    public static mergePattern(pattern1: DrumPattern, pattern2: DrumPattern, name: string){
+    public static mergePattern(pattern1: DrumPattern, pattern2: DrumPattern, name: string) {
         const pattern1Info = pattern1._mergeInfo();
         const pattern2Info = pattern2._mergeInfo();
         if (pattern1Info.subdivisions !== pattern2Info.subdivisions){
@@ -60,10 +61,15 @@ export default class DrumPattern {
             subdivisions,
             repeat: 1, 
             when: [...newWhenPattern1, ...newWhenPattern2],
-        })
+        });
 
     }
-
+    public static showDrumPatternCollection(patternCollection1: DrumPatternCollection): void{
+        console.log(patternCollection1.hihat.show())
+        console.log(patternCollection1.kick.show())
+        console.log(patternCollection1.snare.show())
+        return;
+    }
     public static updateDrumPatternCollectionRepeat(patternCollection: DrumPatternCollection, repeat: number): void {
         patternCollection.hihat.repeat = repeat;
         patternCollection.kick.repeat = repeat;
@@ -121,7 +127,18 @@ export default class DrumPattern {
         this.numberOfBars = drumPatternOpts!.numberOfBars || 1;
         this.subdivisions = drumPatternOpts!.subdivisions || 16;
         this.filename = name;
-        this.when = drumPatternOpts!.when || [];
+        
+        // should add some checks
+        if (drumPatternOpts && Array.isArray(drumPatternOpts.when) && Array.isArray(drumPatternOpts.when[0])){
+            const _when = drumPatternOpts.when as number[][];
+            this.when = _when.map(
+                (whenPart: number[], idx: number): number[] => whenPart.map((value: number): number => value + this.subdivisions * idx)).reduce(
+                (acc: number[], curr: number[]) => [...acc, ...curr], [])
+            
+        } else {
+            const _when = drumPatternOpts!.when as number[] | undefined;
+            this.when = _when || []
+        };
         //this.pattern = _generateDrumPattern(this.numberOfBars, this.subdivisions, drumPatternOpts!.when || [])
         this.repeat = drumPatternOpts!.repeat || 1;
     }

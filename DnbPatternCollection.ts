@@ -1,7 +1,7 @@
 import DrumPattern from './DrumPattern';
 
 const genre = 'dnb';
-
+// TODO: generate collection from JSON or yaml files
 export enum DnbDrumPatterns {
     BASIC_1 = 'basic1',
     BASIC_2 = 'basic2',
@@ -18,7 +18,7 @@ export enum DnbDrumPatterns {
 
 interface DrumPatternInstrumentOptions {
     name?: string;
-    when: number[];
+    when: number[] | number[][];
     numberOfBars?: number;
     subdivisions?: number;
 }
@@ -65,7 +65,7 @@ const patterns: { [key in DnbDrumPatterns]? : DrumPatternFields } = {
     },
     kick: {
         when: [1, 11],
-    }
+    },
 
   },
 
@@ -81,6 +81,93 @@ const patterns: { [key in DnbDrumPatterns]? : DrumPatternFields } = {
     }
   },
 
+
+  [DnbDrumPatterns.BREAKBEAT_3]: {
+    hihat: {
+        when: [1,3,5,7,9,11,13,15],
+    },
+    snare: {
+        when: [13],
+    },
+    kick: {
+        when: [1,3,7,9],
+    }
+  },
+
+  [DnbDrumPatterns.BREAKBEAT_4]: {
+    hihat: {
+        when: [1,3,5,7,9,11,13,15],
+    },
+    snare: {
+        when: [5],
+    },
+    kick: {
+        when: [1,11,15],
+    }
+  },
+
+  [DnbDrumPatterns.EXTENDED_1]: {
+    hihat: {
+        when: [],
+    },
+    snare: {
+        when: [[5, 15], [7, 13]],
+    },
+    kick: {
+        when: [[1, 11], [3, 9]],
+    },
+    numberOfBars: 2,
+  },
+
+  [DnbDrumPatterns.EXTENDED_2]: {
+    hihat: {
+        when: [],
+    },
+    snare: {
+        when: [],
+    },
+    kick: {
+        when: [],
+    }
+  },
+
+  [DnbDrumPatterns.EXTENDED_3]: {
+    hihat: {
+        when: [],
+    },
+    snare: {
+        when: [],
+    },
+    kick: {
+        when: [],
+    }
+  },
+
+  [DnbDrumPatterns.BREAKOUT_1]: {
+    hihat: {
+        when: [],
+    },
+    snare: {
+        when: [],
+    },
+    kick: {
+        when: [],
+    }
+  },
+
+  
+  [DnbDrumPatterns.BREAKOUT_2]: {
+    hihat: {
+        when: [],
+    },
+    snare: {
+        when: [],
+    },
+    kick: {
+        when: [],
+    }
+  },
+  
 };
 
 
@@ -94,6 +181,7 @@ export function getPattern(pattern: DnbDrumPatterns){
 
     if (!chosenPattern) return undefined;
     const { kick, snare, hihat, numberOfBars = 1, subdivisions = 16 } = chosenPattern;
+    
     return {
         hihat: new DrumPattern(hihat.name, {numberOfBars, subdivisions, name: `${genre}_${pattern}_hihat`, ...hihat}),
         snare: new DrumPattern(snare.name, {numberOfBars, name: `${genre}_${pattern}_snare`, subdivisions, ...snare}),
