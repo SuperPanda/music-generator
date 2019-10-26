@@ -51,8 +51,7 @@
   },
   "lint-staged": {
     "*.{ts,js,md,json}": [
-      "npx eslint --ext .ts,.json,.md --fix --",
-      "git add"
+      "npx eslint --ext .ts,.json,.md,.js --fix --"
     ]
   }
 }
