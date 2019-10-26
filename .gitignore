@@ -4,3 +4,4 @@
 **.js
 !prettier.config.js
 !.eslintrc.js
+**dist/**

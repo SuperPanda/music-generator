@@ -32,7 +32,7 @@ module.exports = {
         singleQuote: true
       }
     ],
-    "json/*": ["error", {"allowComments": true}]
+    "json/*": ["error", {"allowComments": false}]
   },
   settings: {
     'import/parsers': {

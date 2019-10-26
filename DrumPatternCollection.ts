@@ -28,7 +28,7 @@ export function repeatDrumPatternCollection(
   const newCollection: DrumPatternCollection = {
     hihat: hihat ? hihat.clone() : undefined,
     kick: kick ? kick.clone() : undefined,
-    snare: snare ? snare.clone() : undefined
+    snare: snare ? snare.clone() : undefined,
   };
 
   if (newCollection.hihat) newCollection.hihat.repeat = repeat;
@@ -136,33 +136,33 @@ export function mergeDrumPatternCollection(
   const mutableObjs: { [idx: string]: MutableObj<DrumPattern> } = {
     hihat1: {
       obj: hihat1,
-      exists: isAvailable(hihat1)
+      exists: isAvailable(hihat1),
     },
     hihat2: {
       obj: hihat2,
-      exists: isAvailable(hihat2)
+      exists: isAvailable(hihat2),
     },
     snare1: {
       obj: snare1,
-      exists: isAvailable(snare1)
+      exists: isAvailable(snare1),
     },
     snare2: {
       obj: snare2,
-      exists: isAvailable(snare2)
+      exists: isAvailable(snare2),
     },
     kick1: {
       obj: kick1,
-      exists: isAvailable(kick1)
+      exists: isAvailable(kick1),
     },
     kick2: {
       obj: kick2,
-      exists: isAvailable(kick2)
-    }
+      exists: isAvailable(kick2),
+    },
   };
   const pairs = [
     [mutableObjs.hihat1, mutableObjs.hihat2],
     [mutableObjs.snare1, mutableObjs.snare2],
-    [mutableObjs.kick1, mutableObjs.kick2]
+    [mutableObjs.kick1, mutableObjs.kick2],
   ];
 
   pairs.forEach(
@@ -175,13 +175,13 @@ export function mergeDrumPatternCollection(
         arr[idx][0].obj = new DrumPattern(name, {
           when: [],
           subdivisions: collection1Subdivisions,
-          numberOfBars: collection1NumBars
+          numberOfBars: collection1NumBars,
         });
       } else if (!pair[1].exists && pair[0].exists) {
         arr[idx][1].obj = new DrumPattern(name, {
           when: [],
           subdivisions: collection2Subdivisions,
-          numberOfBars: collection2NumBars
+          numberOfBars: collection2NumBars,
         });
       }
     }
@@ -209,7 +209,7 @@ export function mergeDrumPatternCollection(
           mutableObjs.snare2.obj as DrumPattern,
           name + '_snare'
         )
-      : undefined
+      : undefined,
   };
 }
 
@@ -268,5 +268,5 @@ export default {
   showDrumPatternCollection,
   saveDrumPatternCollection,
   repeatDrumPatternCollection,
-  trackBuilder
+  trackBuilder,
 };

@@ -8,9 +8,9 @@ const clips = myArpOrder.map(order =>
     notes: scribble.arp({
       chords: myChords,
       count: 8,
-      order
+      order,
     }),
-    accent: 'x-xx--xx'
+    accent: 'x-xx--xx',
   })
 );
 
@@ -24,7 +24,7 @@ const bass1 = scribble.clip({
     .scale('A2 minor')
     .filter<string>(removeNonStringFilter)
     .slice(1),
-  accent: '--x-'
+  accent: '--x-',
 });
 
 const bass2 = scribble.clip({
@@ -34,7 +34,7 @@ const bass2 = scribble.clip({
     .scale('F2 major')
     .filter<string>(removeNonStringFilter)
     .slice(2, 5),
-  accent: '--x-'
+  accent: '--x-',
 });
 const bass3 = scribble.clip({
   notes: 'D2',
@@ -43,7 +43,7 @@ const bass3 = scribble.clip({
     .scale('D2 minor')
     .filter<string>(removeNonStringFilter)
     .slice(2, 5),
-  accent: '--x-'
+  accent: '--x-',
 });
 const bass4 = scribble.clip({
   notes: 'E2',
@@ -52,7 +52,7 @@ const bass4 = scribble.clip({
     .scale('E2 major')
     .filter<string>(removeNonStringFilter)
     .slice(2, 5),
-  accent: '--x-'
+  accent: '--x-',
 });
 console.log(bass1);
 scribble.midi([...bass1, ...bass2, ...bass3, ...bass4], 'bass.mid');
@@ -62,7 +62,7 @@ const chordsClip = scribble.clip({
   // M stands for Major, m stands for minor
   //notes: 'Dm BbM Am FM BbM FM CM Gm',
   notes: myChords,
-  pattern: 'x___'.repeat(8)
+  pattern: 'x___'.repeat(8),
 });
 
 scribble.midi([].concat(...clips), 'arp.mid');
@@ -73,7 +73,7 @@ scribble.midi(chordsClip, 'chords.mid');
 const multiple = 8;
 const kick = scribble.clip({
   notes: 'c4',
-  pattern: 'xxxxxxx[xR]xxxxxxx[x[RR]]'.repeat(4 * multiple)
+  pattern: 'xxxxxxx[xR]xxxxxxx[x[RR]]'.repeat(4 * multiple),
 });
 
 scribble.midi(kick, 'kick.mid');
@@ -83,7 +83,7 @@ const ch = scribble.clip({
   notes: 'c4',
   pattern: '[xR][x[xR]]'.repeat(8 * multiple),
   subdiv: '8n',
-  accentLow: 60
+  accentLow: 60,
 });
 
 scribble.midi(ch, 'ch.mid');
@@ -91,7 +91,7 @@ scribble.midi(ch, 'ch.mid');
 // open hats
 const oh = scribble.clip({
   notes: 'c4',
-  pattern: '[-x][Rx][Rx][Rx]'.repeat(8 * multiple)
+  pattern: '[-x][Rx][Rx][Rx]'.repeat(8 * multiple),
 });
 scribble.midi(oh, 'oh.mid');
 
@@ -100,7 +100,7 @@ const D = '-x-x'; // base pattern
 const E = '-[xR]-[Rx]'; // variation
 const snare = scribble.clip({
   notes: 'c4',
-  pattern: (D + D + E + D + D + E + D + D).repeat(4)
+  pattern: (D + D + E + D + D + E + D + D).repeat(4),
 });
 
 scribble.midi(snare, 'snare.mid');

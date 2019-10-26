@@ -2,7 +2,7 @@ import { getPattern, DnbDrumPatterns } from './DnbPatternCollection';
 import {
   showDrumPatternCollection,
   saveDrumPatternCollection,
-  trackBuilder
+  trackBuilder,
 } from './DrumPatternCollection';
 
 /*
@@ -126,7 +126,7 @@ if (ext2 && hh1 && eb2 && bb1 && b1) {
   const track3 = {
     hihat: track2.hihat,
     snare: track1.snare,
-    kick: track1.kick
+    kick: track1.kick,
   };
   console.log('track 1');
   showDrumPatternCollection(track1);

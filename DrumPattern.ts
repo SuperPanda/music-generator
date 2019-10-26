@@ -79,7 +79,7 @@ export class DrumPattern {
       numberOfBars,
       subdivisions,
       repeat: 1,
-      when: [...newWhenPattern1, ...newWhenPattern2]
+      when: [...newWhenPattern1, ...newWhenPattern2],
     });
   }
 
@@ -149,7 +149,7 @@ export class DrumPattern {
       clip({
         notes: 'c4',
         pattern: this.show(),
-        subdiv: `${this._subdivisions}n`
+        subdiv: `${this._subdivisions}n`,
       }),
       filename.endsWith('.mid') ? filename : filename + '.mid'
     );
@@ -165,7 +165,7 @@ export class DrumPattern {
       pattern: this.pattern,
       subdivisions: this._subdivisions,
       repeat: this._repeat,
-      when: this._when
+      when: this._when,
     };
   }
 
