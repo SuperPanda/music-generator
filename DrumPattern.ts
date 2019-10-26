@@ -24,6 +24,7 @@ export interface DrumPatternOpts {
     subdivisions?: number;
     when?: number[] | number[][];
     repeat?: number;
+    name?: string;
 };
 
 export interface DrumPatternCollection {
@@ -126,7 +127,7 @@ export default class DrumPattern {
     constructor(name: string = 'emptydrums', drumPatternOpts?: DrumPatternOpts){
         this.numberOfBars = drumPatternOpts!.numberOfBars || 1;
         this.subdivisions = drumPatternOpts!.subdivisions || 16;
-        this.filename = name;
+        this.filename = drumPatternOpts!.name || name;
         
         // should add some checks
         if (drumPatternOpts && Array.isArray(drumPatternOpts.when) && Array.isArray(drumPatternOpts.when[0])){

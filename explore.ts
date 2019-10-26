@@ -47,9 +47,12 @@ if (p1 && p1.kick && p2 && p2.kick)  {
     const newPattern = DrumPattern.mergePattern(p1.kick, p2.kick, 'test');
     console.log(newPattern.show());
 }*/
-
-const p1 = getPattern(DnbDrumPatterns.EXTENDED_1);
+const p1 = getPattern(DnbDrumPatterns.BREAKBEAT_1);
+const p2 = getPattern(DnbDrumPatterns.BREAKBEAT_2);
+const p3 = getPattern(DnbDrumPatterns.EXTENDED_1);
 //const newPattern = DrumPattern.mergePattern(p1.kick, p2.kick, 'test');
-if (p1) {
-    DrumPattern.showDrumPatternCollection(p1);
+if (p1 && p2 && p3) {
+    const a = DrumPattern.mergeDrumPatternCollection(p1, p2);
+    const b = DrumPattern.mergeDrumPatternCollection(a, p3);
+    DrumPattern.saveDrumPatternCollection(b);
 }
