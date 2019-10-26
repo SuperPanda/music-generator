@@ -19,7 +19,7 @@ export enum DnbDrumPatterns {
     BREAKOUT_4 = 'breakout4',
     BREAKOUT_5 = 'breakout5',
     EXTENDED_BREAKOUT_1 = 'extendedbreakout1',
-    BASIC_HIHAT_1 = 'basichithat1',
+    BASIC_HIHAT_1 = 'basichihat1',
 }
 
 interface DrumPatternInstrumentOptions {
@@ -40,172 +40,172 @@ interface DrumPatternFields {
 // Graciously adapted from: https://music.tutsplus.com/tutorials/making-the-beat-drum-n-bass-drums--audio-8697
 
 const patterns: { [key in DnbDrumPatterns]? : DrumPatternFields } = {
-  [DnbDrumPatterns.BASIC_1]: {
-    hihat: {
-        when: [1,3,5,7,9,11,13,15],            
-    },
-    snare: {
-        when: [5,13],
-    },
-    kick: {
-        when: [1,11],
-    },
- },
-
-  [DnbDrumPatterns.BASIC_2]: {
-    hihat: {
-        when: [1,3,5,7,9,11,13,15],             
-    },
-    snare: {
-        when: [5,11],
-    },
-    kick: {
-        when: [1,7,13],
-    },
-  },
-
-  [DnbDrumPatterns.BREAKBEAT_1]: {
-    hihat: {
-        when: [1,3,5,7,9,11,13,15],
-    },
-    snare: {
-        when: [5, 15],
-    },
-    kick: {
-        when: [1, 11],
+    [DnbDrumPatterns.BASIC_1]: {
+        hihat: {
+            when: [1,3,5,7,9,11,13,15],            
+        },
+        snare: {
+            when: [5,13],
+        },
+        kick: {
+            when: [1,11],
+        },
     },
 
-  },
+    [DnbDrumPatterns.BASIC_2]: {
+        hihat: {
+            when: [1,3,5,7,9,11,13,15],             
+        },
+        snare: {
+            when: [5,11],
+        },
+        kick: {
+            when: [1,7,13],
+        },
+    },
 
-  [DnbDrumPatterns.BREAKBEAT_2]: {
-    hihat: {
-        when: [1,3,5,7,9,11,13,15],
+    [DnbDrumPatterns.BREAKBEAT_1]: {
+        hihat: {
+            when: [1,3,5,7,9,11,13,15],
+        },
+        snare: {
+            when: [5, 15],
+        },
+        kick: {
+            when: [1, 11],
+        },
+
     },
-    snare: {
-        when: [5,7,11],
+
+    [DnbDrumPatterns.BREAKBEAT_2]: {
+        hihat: {
+            when: [1,3,5,7,9,11,13,15],
+        },
+        snare: {
+            when: [5,7,11],
+        },
+        kick: {
+            when: [1, 13],
+        }
     },
-    kick: {
-        when: [1, 13],
-    }
-  },
 
 
-  [DnbDrumPatterns.BREAKBEAT_3]: {
-    hihat: {
-        when: [1,3,5,7,9,11,13,15],
+    [DnbDrumPatterns.BREAKBEAT_3]: {
+        hihat: {
+            when: [1,3,5,7,9,11,13,15],
+        },
+        snare: {
+            when: [13],
+        },
+        kick: {
+            when: [1,3,7,9],
+        }
     },
-    snare: {
-        when: [13],
-    },
-    kick: {
-        when: [1,3,7,9],
-    }
-  },
 
-  [DnbDrumPatterns.BREAKBEAT_4]: {
-    hihat: {
-        when: [1,3,5,7,9,11,13,15],
+    [DnbDrumPatterns.BREAKBEAT_4]: {
+        hihat: {
+            when: [1,3,5,7,9,11,13,15],
+        },
+        snare: {
+            when: [5],
+        },
+        kick: {
+            when: [1,11,15],
+        }
     },
-    snare: {
-        when: [5],
-    },
-    kick: {
-        when: [1,11,15],
-    }
-  },
 
-  [DnbDrumPatterns.EXTENDED_1]: { // # 5
-    snare: {
-        when: [[5, 15], [7, 13]],
+    [DnbDrumPatterns.EXTENDED_1]: { // # 5
+        snare: {
+            when: [[5, 15], [7, 13]],
+        },
+        kick: {
+            when: [[1, 11], [3, 9]],
+        },
+        numberOfBars: 2,
     },
-    kick: {
-        when: [[1, 11], [3, 9]],
-    },
-    numberOfBars: 2,
-  },
 
-  [DnbDrumPatterns.EXTENDED_2]: { // # 6
-    snare: {
-        when: [[5, 11],[3, 11]],
+    [DnbDrumPatterns.EXTENDED_2]: { // # 6
+        snare: {
+            when: [[5, 11],[3, 11]],
+        },
+        kick: {
+            when: [[1,7,13],[7,3]],
+        },
+        numberOfBars: 2,
     },
-    kick: {
-        when: [[1,7,13],[7,3]],
-    },
-    numberOfBars: 2,
-  },
 
-  [DnbDrumPatterns.EXTENDED_3]: {
-    snare: {
-        when: [[5,13],[5,11]],
+    [DnbDrumPatterns.EXTENDED_3]: {
+        snare: {
+            when: [[5,13],[5,11]],
+        },
+        kick: {
+            when: [[1,11],[1,7,9]],
+        },
+        numberOfBars: 2,
     },
-    kick: {
-        when: [[1,11],[1,7,9]],
-    },
-    numberOfBars: 2,
-  },
 
-  [DnbDrumPatterns.BREAKOUT_1]: {
-    snare: {
-        when: [5, 8, 10, 13],
+    [DnbDrumPatterns.BREAKOUT_1]: {
+        snare: {
+            when: [5, 8, 10, 13],
+        },
+        kick: {
+            when: [1, 11],
+        }
     },
-    kick: {
-        when: [1, 11],
-    }
-  },
 
   
-  [DnbDrumPatterns.BREAKOUT_2]: { // # 9
-    snare: {
-        when: [5,8,10,15],
+    [DnbDrumPatterns.BREAKOUT_2]: { // # 9
+        snare: {
+            when: [5,8,10,15],
+        },
+        kick: {
+            when: [1,11],
+        }
     },
-    kick: {
-        when: [1,11],
-    }
-  },
   
   
-  [DnbDrumPatterns.BREAKOUT_3]: { 
-    snare: {
-        when: [1,2,7,13],
+    [DnbDrumPatterns.BREAKOUT_3]: { 
+        snare: {
+            when: [1,2,7,13],
+        },
+        kick: {
+            when: [3,9],
+        }
     },
-    kick: {
-        when: [3,9],
-    }
-  },
 
-  [DnbDrumPatterns.BREAKOUT_4]: { 
-    snare: {
-        when: [13, 16],
+    [DnbDrumPatterns.BREAKOUT_4]: { 
+        snare: {
+            when: [13, 16],
+        },
+        kick: {
+            when: [1,7,9],
+        }
     },
-    kick: {
-        when: [1,7,9],
-    }
-  },
 
-  [DnbDrumPatterns.BREAKOUT_5]: { // # 12 
-    snare: {
-        when: [2,5,8,11],
+    [DnbDrumPatterns.BREAKOUT_5]: { // # 12 
+        snare: {
+            when: [2,5,8,11],
+        },
+        kick: {
+            when: [3,9,13],
+        }
     },
-    kick: {
-        when: [3,9,13],
-    }
-  },
 
-  [DnbDrumPatterns.EXTENDED_BREAKOUT_1]: { // # 13
-    snare: {
-        when: [[2,5,8,11],[2,5,8,11]],
-    },  
-    kick: {
-        when: [[3,9,13,15],[3,9]],
+    [DnbDrumPatterns.EXTENDED_BREAKOUT_1]: { // # 13
+        snare: {
+            when: [[2,5,8,11],[2,5,8,11]],
+        },  
+        kick: {
+            when: [[3,9,13,15],[3,9]],
+        },
+        numberOfBars: 2,
     },
-    numberOfBars: 2,
-  },
-  // # 14, # 15 use timbre shifts - not sure which channel to add too
-  [DnbDrumPatterns.BASIC_HIHAT_1]: { // 16
-    hihat: {
-        when: [1,3,5,7,9,10,11,13,15],            
-    },
-  }
+    // # 14, # 15 use timbre shifts - not sure which channel to add too
+    [DnbDrumPatterns.BASIC_HIHAT_1]: { // 16
+        hihat: {
+            when: [1,3,5,7,9,10,11,13,15],            
+        },
+    }
 };
 
 
@@ -227,11 +227,11 @@ export function getPattern(pattern: DnbDrumPatterns): DrumPatternCollection | un
         hihat: hihat ? new DrumPattern(`${genre}_${pattern}_hihat`, {numberOfBars, subdivisions, ...hihat}) : undefined,
         snare: snare ? new DrumPattern(`${genre}_${pattern}_snare`, {numberOfBars, subdivisions, ...snare}) : undefined,
         kick: kick ? new DrumPattern(`${genre}_${pattern}_kick`, {numberOfBars, subdivisions, ...kick}) : undefined,
-    }
+    };
 
 }
 
 export default {
     getPattern,
     DnbDrumPatterns,
-}
+};

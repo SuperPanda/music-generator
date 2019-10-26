@@ -1,7 +1,5 @@
-import {getChordsByProgression, clip, midi } from "scribbletune"
-import DrumPattern from './DrumPattern';
 import { getPattern, DnbDrumPatterns } from './DnbPatternCollection';
-import { showDrumPatternCollection, saveDrumPatternCollection, trackBuilder } from "./DrumPatternCollection";
+import { showDrumPatternCollection, saveDrumPatternCollection, trackBuilder } from './DrumPatternCollection';
 
 
 
@@ -10,11 +8,6 @@ import { showDrumPatternCollection, saveDrumPatternCollection, trackBuilder } fr
  * 
  */
 console.log('hi');
-// basic dnb pattern
-const hihat = [1,3,5,7,9,11,13,15];
-const snare = [5,13];
-const kick = [1,11];
-
 
 /*const hihatPattern = new DrumPattern('demo-hihat', { when: hihat } );
 const snarePattern = new DrumPattern('demo-snare', { when: snare } );
@@ -53,33 +46,33 @@ if (p1 && p1.kick && p2 && p2.kick)  {
 //const newPattern = DrumPattern.mergePattern(p1.kick, p2.kick, 'test');
 // need a mix function
 // if (p1 && p2) {
-    // p1
-    // -----------------
-    // ---x----x---x----
-    // --x-x-x--x-x---x-
-    // p2 
-    // ---x-x--x---x-x--
-    // ----------------
-    // ----------------
-    // p3 = mix p1 , p2
-    // --x-x-x--x--x-x-x-
-    // --x-x-x-x--x-x-x--
-    // ---x-x-x-x-x-x-x--
-    // should change name to concat
-    // p4 = merge p1, p2
-    // -------------------x---x-x--x-x-x---x-
-    // ---x-x---x--x-x-x---------------------
-    // ---x-x--x-x-x-x-x--------------------
-    //const p3 = {
-    //    hihat: p2.hihat,
-    //    kick: p1.kick,
-    //    snare: p1.snare,
-    //}
-  //  DrumPattern.showDrumPatternCollection(p3);
-   // const p4 = DrumPattern.mergeDrumPatternCollection(p1, p2, 'mix');
-    //DrumPattern.showDrumPatternCollection(p4);
+// p1
+// -----------------
+// ---x----x---x----
+// --x-x-x--x-x---x-
+// p2 
+// ---x-x--x---x-x--
+// ----------------
+// ----------------
+// p3 = mix p1 , p2
+// --x-x-x--x--x-x-x-
+// --x-x-x-x--x-x-x--
+// ---x-x-x-x-x-x-x--
+// should change name to concat
+// p4 = merge p1, p2
+// -------------------x---x-x--x-x-x---x-
+// ---x-x---x--x-x-x---------------------
+// ---x-x--x-x-x-x-x--------------------
+//const p3 = {
+//    hihat: p2.hihat,
+//    kick: p1.kick,
+//    snare: p1.snare,
+//}
+//  DrumPattern.showDrumPatternCollection(p3);
+// const p4 = DrumPattern.mergeDrumPatternCollection(p1, p2, 'mix');
+//DrumPattern.showDrumPatternCollection(p4);
 
-    //DrumPattern.saveDrumPatternCollection({...p1, ...p2}, 'mix');
+//DrumPattern.saveDrumPatternCollection({...p1, ...p2}, 'mix');
 //}
 
 
@@ -99,11 +92,11 @@ if (p1 && p1.kick && p2 && p2.kick)  {
         mergeFunc(inputArray.map(element => elementFunc(element)))
   */
  
-  const ext2 = getPattern(DnbDrumPatterns.EXTENDED_1);
-  const hh1 = getPattern(DnbDrumPatterns.BASIC_HIHAT_1);
-  const bb1 = getPattern(DnbDrumPatterns.BREAKBEAT_3);
-  const eb2 = getPattern(DnbDrumPatterns.EXTENDED_BREAKOUT_1);
-  const b1 = getPattern(DnbDrumPatterns.BASIC_2);
+const ext2 = getPattern(DnbDrumPatterns.EXTENDED_1);
+const hh1 = getPattern(DnbDrumPatterns.BASIC_HIHAT_1);
+const bb1 = getPattern(DnbDrumPatterns.BREAKBEAT_3);
+const eb2 = getPattern(DnbDrumPatterns.EXTENDED_BREAKOUT_1);
+const b1 = getPattern(DnbDrumPatterns.BASIC_2);
   
 
 
@@ -133,7 +126,7 @@ if (ext2 && hh1 && eb2 && bb1 && b1) {
         hihat: track2.hihat,
         snare: track1.snare,
         kick: track1.kick,
-    }
+    };
     console.log('track 1');
     showDrumPatternCollection(track1);
     console.log('track 1');

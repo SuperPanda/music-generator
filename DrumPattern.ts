@@ -1,5 +1,5 @@
-import {clip, midi } from "scribbletune"
-import wu from "wu";
+import {clip, midi } from 'scribbletune';
+import wu from 'wu';
 import { DnbDrumPatterns } from './DnbPatternCollection';
 
 function _generateDrumPattern(numberOfBars: number, subdivisions: number, when: number[]){
@@ -7,7 +7,7 @@ function _generateDrumPattern(numberOfBars: number, subdivisions: number, when: 
     const pattern = patternTemplate.split('');   
 
     return when.reduce((acc, curr) => {
-        if (typeof curr === "number"){
+        if (typeof curr === 'number'){
             let next = acc;
             next[curr-1] = 'x';
             return next;
@@ -25,7 +25,7 @@ export interface DrumPatternOpts {
     when?: number[] | number[][];
     repeat?: number;
     name?: string;
-};
+}
 
 export default class DrumPattern {
 
@@ -33,14 +33,14 @@ export default class DrumPattern {
         const pattern1Info = pattern1.mergeInfo();
         const pattern2Info = pattern2.mergeInfo();
         if (pattern1Info.subdivisions !== pattern2Info.subdivisions){
-            console.log("Need to implement LCM and readjust subdivisions");
-            throw new Error("not implemented");
+            console.log('Need to implement LCM and readjust subdivisions');
+            throw new Error('not implemented');
         }
         // if no sub division renormalization needed
         const subdivisions = pattern1Info.subdivisions;
         const numberOfBars = pattern1Info.numberOfBars * pattern1Info.repeat + pattern2Info.numberOfBars * pattern2Info.repeat;
         const offset = pattern1Info.numberOfBars * pattern1Info.repeat * pattern1Info.subdivisions;  // adjust this when different subdivisions
-          const newWhenPattern1 = wu(Array.from(Array(pattern1Info.repeat).keys())).reduce((acc: number[], curr) => {
+        const newWhenPattern1 = wu(Array.from(Array(pattern1Info.repeat).keys())).reduce((acc: number[], curr) => {
 
             const _thisWhenpatternForThisRepeat = pattern1Info.when.map(value => value + subdivisions * curr);
             return [...acc, ..._thisWhenpatternForThisRepeat]; 
@@ -76,12 +76,12 @@ export default class DrumPattern {
             const _when = drumPatternOpts.when as number[][];
             this._when = _when.map(
                 (whenPart: number[], idx: number): number[] => whenPart.map((value: number): number => value + this._subdivisions * idx)).reduce(
-                (acc: number[], curr: number[]) => [...acc, ...curr], [])
+                (acc: number[], curr: number[]) => [...acc, ...curr], []);
             
         } else {
             const _when = drumPatternOpts!.when as number[] | undefined;
-            this._when = _when || []
-        };
+            this._when = _when || [];
+        }
         //this.pattern = _generateDrumPattern(this.numberOfBars, this.subdivisions, drumPatternOpts!.when || [])
         this._repeat = drumPatternOpts!.repeat || 1;
     }
@@ -91,7 +91,7 @@ export default class DrumPattern {
     }
     
     get pattern() {
-        return _generateDrumPattern(this._numberOfBars, this._subdivisions, this._when)        
+        return _generateDrumPattern(this._numberOfBars, this._subdivisions, this._when);        
     }
 
     set repeat(repeat: number){
@@ -115,7 +115,7 @@ export default class DrumPattern {
             notes: 'c4',
             pattern: this.show(),
             subdiv: `${this._subdivisions}n`,
-        }), (filename.endsWith('.mid') ? filename : filename + '.mid'))
+        }), (filename.endsWith('.mid') ? filename : filename + '.mid'));
     }
 
     generate(when: number[]){
@@ -129,7 +129,7 @@ export default class DrumPattern {
             subdivisions: this._subdivisions,
             repeat: this._repeat,
             when: this._when,
-        }
+        };
     }
 
     clone(): DrumPattern {
