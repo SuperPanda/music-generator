@@ -5,7 +5,7 @@ A place to store snippets of musical knowledge and to more easily be able to exp
 ## Components
 ### Drum Patterns
 So far it contains 3 components (will reword later),
-- DnbPatternCollection (a collection of actual patterns that can be mixed and merged) (TODO: Explain how it uses subdivisions, number of bars, and an array of numbers for each bar for each instrument)
+- DnbPatternCollection (a collection of actual patterns that can be mixed and merged) (TODO: Explain how it uses subdivisions, number of bars, and an array of numbers for each bar for each instrument). The DnB  Drum patterns are from [this tutorial by Mike Elliot](https://music.tutsplus.com/tutorials/making-the-beat-drum-n-bass-drums--audio-8697).
 ```
 // adapted from: https://music.tutsplus.com/tutorials/making-the-beat-drum-n-bass-drums--audio-8697
 const patterns: { [key in DnbDrumPatterns]? : DrumPatternFields } = {
