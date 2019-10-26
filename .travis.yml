@@ -1,11 +1,12 @@
 language: node_js
 node_js:
- - "node"
+- "node"
 
-cache:
+cache: 
  directories:
- - "$HOME/.npm"
+   - "$HOME/.npm"
 
-script:
- - npm install
- - npm run lint
+install:
+  - npm install
+  - npm run lint
+
