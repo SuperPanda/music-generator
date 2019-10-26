@@ -221,6 +221,7 @@ export function getPattern(pattern: DnbDrumPatterns): DrumPatternCollection | un
     // hihat = hihat || { when: (numberOfBars === 1 ? [] : Array(numberOfBars).fill([]))};
     // snare = snare || { when: (numberOfBars === 1 ? [] : Array(numberOfBars).fill([]))};
     // kick = kick || { when: (numberOfBars === 1 ? [] : Array(numberOfBars).fill([]))};
+    
     return {
         hihat: hihat ? new DrumPattern(`${genre}_${pattern}_hihat`, {numberOfBars, subdivisions, ...hihat}) : undefined,
         snare: snare ? new DrumPattern(`${genre}_${pattern}_snare`, {numberOfBars, subdivisions, ...snare}) : undefined,

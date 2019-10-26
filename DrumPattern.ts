@@ -42,8 +42,8 @@ export default class DrumPattern {
     public static mergePattern(pattern1: DrumPattern, pattern2: DrumPattern, name: string) {
         // console.log(JSON.stringify(pattern1));
         // console.log(JSON.stringify(pattern2));
-        const pattern1Info = pattern1._mergeInfo();
-        const pattern2Info = pattern2._mergeInfo();
+        const pattern1Info = pattern1.mergeInfo();
+        const pattern2Info = pattern2.mergeInfo();
         if (pattern1Info.subdivisions !== pattern2Info.subdivisions){
             console.log("Need to implement LCM and readjust subdivisions");
             throw new Error("not implemented");
@@ -81,11 +81,21 @@ export default class DrumPattern {
 
         return;
     }
-    public static updateDrumPatternCollectionRepeat(patternCollection: DrumPatternCollection, repeat: number): void {
-        patternCollection.hihat!.repeat = repeat;
-        patternCollection.kick!.repeat = repeat;
-        patternCollection.snare!.repeat = repeat;
-        return;
+    public static repeatDrumPatternCollection(patternCollection: DrumPatternCollection, repeat: number): DrumPatternCollection {
+        const { hihat, kick, snare } = patternCollection; 
+        const newCollection: DrumPatternCollection = {
+            hihat: (hihat ? hihat.clone() : undefined),
+            kick: (kick ?  kick.clone() : undefined),
+            snare: (snare ? snare.clone() : undefined),
+        };
+
+        if (newCollection.hihat)
+            newCollection.hihat.repeat = repeat;
+        if (newCollection.kick)
+            newCollection.kick.repeat = repeat;
+        if (newCollection.snare)
+            newCollection.snare.repeat = repeat;
+        return newCollection;
     }
 
     public static saveDrumPatternCollection(patternCollection: DrumPatternCollection, collectionName?: string) {
@@ -111,21 +121,36 @@ export default class DrumPattern {
         const removeEmptyFilter = (value: DrumPattern | undefined ): value is DrumPattern => !!value;
   
         /////////////
-        let collection1NumBars = Math.max.apply(this, collection1.filter(removeEmptyFilter).map(instrument => instrument.numberOfBars));
-        let collection2NumBars = Math.max.apply(this, collection2.filter(removeEmptyFilter).map(instrument => instrument.numberOfBars));
+        let collection1NumBars = Math.max.apply(this, collection1.filter(removeEmptyFilter).map(instrument => instrument._numberOfBars * instrument._repeat));
+        let collection2NumBars = Math.max.apply(this, collection2.filter(removeEmptyFilter).map(instrument => instrument._numberOfBars * instrument._repeat));
         // TODO: re-calculate later
-        let collection1Subdivisions = Math.max.apply(this, collection1.filter(removeEmptyFilter).map(instrument => instrument.subdivisions));
-        let collection2Subdivisions = Math.max.apply(this, collection2.filter(removeEmptyFilter).map(instrument => instrument.subdivisions));
-
-        const measuresOfCollection1 = collection1.filter(removeEmptyFilter).map(instrument => (instrument.repeat * instrument.numberOfBars * instrument.subdivisions));
+        let collection1Subdivisions = Math.max.apply(this, collection1.filter(removeEmptyFilter).map(instrument => instrument._subdivisions));
+        let collection2Subdivisions = Math.max.apply(this, collection2.filter(removeEmptyFilter).map(instrument => instrument._subdivisions));
+ /*       console.log(name);
+        console.log({
+           collection1NumBars,
+           collection2NumBars,
+           collection1Subdivisions,
+           collection2Subdivisions, 
+        });
+        console.log(collection1);*/
+        const measuresOfCollection1 = collection1.filter(removeEmptyFilter).map(instrument => (instrument._repeat * instrument._numberOfBars * instrument._subdivisions));
         if (measuresOfCollection1.filter(value => value !== Math.max.apply(this, measuresOfCollection1)).length !== 0){
             throw new Error("Unequal measures of drums in same collection not currently supported for merge " + JSON.stringify(measuresOfCollection1));
         }
-
-     
-        // TODO: renormalize
+/*
+        console.log(name);
+        console.log({
+           collection1NumBars,
+           collection2NumBars,
+           collection1Subdivisions,
+           collection2Subdivisions, 
+        });
+        console.log(collection1);
+  */
+       // TODO: renormalize
  
-        const measuresOfCollection2 = collection2.filter(removeEmptyFilter).map(instrument => instrument.repeat * instrument.numberOfBars * instrument.subdivisions);
+        const measuresOfCollection2 = collection2.filter(removeEmptyFilter).map(instrument => instrument._repeat * instrument._numberOfBars * instrument._subdivisions);
         if (measuresOfCollection2.filter(value => value !== Math.max.apply(this, measuresOfCollection2)).length > 0){
             throw new Error("Unequal measures of drums in same collection not currently supported for merge" + JSON.stringify(measuresOfCollection2));
         }
@@ -202,60 +227,67 @@ export default class DrumPattern {
     }
 
 
-    private numberOfBars: number;
-    private subdivisions: number;
+    private _numberOfBars: number;
+    private _subdivisions: number;
     //private pattern: string[];
-    private when: number[];
-    private filename: string;
-    public repeat: number;
+    private _when: number[];
+    private _name: string;
+    private _repeat: number;
     constructor(name: string = 'emptydrums', drumPatternOpts?: DrumPatternOpts){
-        this.numberOfBars = drumPatternOpts!.numberOfBars || 1;
-        this.subdivisions = drumPatternOpts!.subdivisions || 16;
-        this.filename = drumPatternOpts!.name || name;
+        this._numberOfBars = drumPatternOpts!.numberOfBars || 1;
+        this._subdivisions = drumPatternOpts!.subdivisions || 16;
+        this._name = drumPatternOpts!.name || name;
         
         // should add some checks
         if (drumPatternOpts && Array.isArray(drumPatternOpts.when) && Array.isArray(drumPatternOpts.when[0])){
             const _when = drumPatternOpts.when as number[][];
-            this.when = _when.map(
-                (whenPart: number[], idx: number): number[] => whenPart.map((value: number): number => value + this.subdivisions * idx)).reduce(
+            this._when = _when.map(
+                (whenPart: number[], idx: number): number[] => whenPart.map((value: number): number => value + this._subdivisions * idx)).reduce(
                 (acc: number[], curr: number[]) => [...acc, ...curr], [])
             
         } else {
             const _when = drumPatternOpts!.when as number[] | undefined;
-            this.when = _when || []
+            this._when = _when || []
         };
         //this.pattern = _generateDrumPattern(this.numberOfBars, this.subdivisions, drumPatternOpts!.when || [])
-        this.repeat = drumPatternOpts!.repeat || 1;
+        this._repeat = drumPatternOpts!.repeat || 1;
     }
 
     show(){
-        return this.pattern.join('').repeat(this.repeat);
+        return this.pattern.join('').repeat(this._repeat);
     }
     
     get pattern() {
-        return _generateDrumPattern(this.numberOfBars, this.subdivisions, this.when)        
+        return _generateDrumPattern(this._numberOfBars, this._subdivisions, this._when)        
     }
 
+    set repeat(repeat: number){
+        this._repeat = repeat;
+    }
     save(name? : string){
-        let filename = name || this.filename;
+        let filename = name || this._name;
         midi(clip({
             notes: 'c4',
             pattern: this.show(),
-            subdiv: `${this.subdivisions}n`,
+            subdiv: `${this._subdivisions}n`,
         }), (filename.endsWith('.mid') ? filename : filename + '.mid'))
     }
 
     generate(when: number[]){
-        this.when = when;//_generateDrumPattern(this.numberOfBars, this.subdivisions, when);
+        this._when = when;//_generateDrumPattern(this.numberOfBars, this.subdivisions, when);
     }
 
-    _mergeInfo(){
+    mergeInfo(){
         return {
-            numberOfBars: this.numberOfBars,
+            numberOfBars: this._numberOfBars,
             pattern: this.pattern,
-            subdivisions: this.subdivisions,
-            repeat: this.repeat,
-            when: this.when,
+            subdivisions: this._subdivisions,
+            repeat: this._repeat,
+            when: this._when,
         }
+    }
+
+    clone(): DrumPattern {
+        return Object.assign( Object.create( Object.getPrototypeOf(this)), this);
     }
 }
