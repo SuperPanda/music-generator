@@ -1,6 +1,6 @@
 
 # Music generator
-[![Build Status](https://travis-ci.com/SuperPanda/music-generator.svg?branch=master)](https://travis-ci.com/SuperPanda/music-generator)
+[![Build Status](https://travis-ci.com/SuperPanda/music-generator.svg?branch=master)](https://travis-ci.com/SuperPanda/music-generator) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 ## About
 A place to store snippets of musical knowledge and to more easily be able to explore ideas. I currently use this project to generate midis to import into DAWs.
 ## Components
